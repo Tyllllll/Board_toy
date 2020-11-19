@@ -1,0 +1,13 @@
+<resources>
+	<string name="app_name">信息公告板</string>
+	<string name="board_title">公告板</string>
+	<string name="news_title">Title</string>
+	<string name="author">Author</string>
+	<string name="publish_time">publishTime</string>
+	<string name="news_photo">newsPhoto</string>
+	<item name="news_type0" type="id"/>
+	<item name="news_type1" type="id"/>
+	<item name="news_type2" type="id"/>
+	<item name="news_type3" type="id"/>
+	<item name="news_type4" type="id"/>
+</resources>
