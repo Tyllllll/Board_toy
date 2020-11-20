@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="team.group10.board">
 
+	<uses-permission android:name="android.permission.INTERNET" />
+
 	<application
 		android:allowBackup="true"
 		android:icon="@mipmap/ic_launcher"
@@ -10,17 +12,19 @@
 		android:supportsRtl="true"
 		android:theme="@style/Theme.Board"
 		android:largeHeap="true"
-		android:hardwareAccelerated="false">
+		android:hardwareAccelerated="true">
 <!--		<meta-data-->
 <!--			android:name="com.google.android.actions" />-->
 
-		<activity android:name=".Content">
+		<activity android:name=".activity.ContentActivity">
+<!--		<activity android:name=".activity.LoginActivity">-->
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
+		<activity android:name=".activity.LoginActivity" />
 	</application>
 
 </manifest>

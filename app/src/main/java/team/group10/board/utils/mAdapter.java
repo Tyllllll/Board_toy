@@ -1,7 +1,9 @@
 package team.group10.board.utils;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,8 +63,9 @@ public class mAdapter extends BaseAdapter {
 		final ImageSize imageLayout2 = new ImageSize(200, 200);
 		final ImageSize imageLayout3 = new ImageSize(1000, 400);
 		final ImageSize imageLayout4 = new ImageSize(200, 200);
+		final int type = newsItemList.get(i).getType();
 		// 判断view的布局类型
-		switch (newsItemList.get(i).getType()) {
+		switch (type) {
 			case 0:
 				// 获取view对象
 				if (view == null) {
@@ -83,10 +86,6 @@ public class mAdapter extends BaseAdapter {
 				} else {
 					holder0 = (ViewHolder1) view.getTag(R.id.news_type0);
 				}
-				// 设置view内容
-				holder0.title.setText(newsItemList.get(i).getMap().get("title").toString());
-				holder0.author.setText(newsItemList.get(i).getMap().get("author").toString());
-				holder0.publishTime.setText(newsItemList.get(i).getMap().get("publishTime").toString());
 				break;
 			case 1:
 				if (view == null) {
@@ -108,11 +107,6 @@ public class mAdapter extends BaseAdapter {
 				} else {
 					holder1 = (ViewHolder2) view.getTag(R.id.news_type1);
 				}
-				holder1.title.setText(newsItemList.get(i).getMap().get("title").toString());
-				holder1.author.setText(newsItemList.get(i).getMap().get("author").toString());
-				holder1.publishTime.setText(newsItemList.get(i).getMap().get("publishTime").toString());
-//				holder1.image.setImageResource((Integer) newsItemList.get(i).getMap().get("image"));
-				holder1.image.setImageBitmap(mImageConvert.decodeImage(view.getResources(), (Integer) newsItemList.get(i).getMap().get("image"), imageLayout1.mWidth, imageLayout1.mHeight));
 				break;
 			case 2:
 				if (view == null) {
@@ -132,11 +126,6 @@ public class mAdapter extends BaseAdapter {
 				} else {
 					holder2 = (ViewHolder2) view.getTag(R.id.news_type2);
 				}
-				holder2.title.setText(newsItemList.get(i).getMap().get("title").toString());
-				holder2.author.setText(newsItemList.get(i).getMap().get("author").toString());
-				holder2.publishTime.setText(newsItemList.get(i).getMap().get("publishTime").toString());
-//				holder2.image.setImageResource((Integer) newsItemList.get(i).getMap().get("image"));
-				holder2.image.setImageBitmap(mImageConvert.decodeImage(view.getResources(), (Integer) newsItemList.get(i).getMap().get("image"), imageLayout2.mWidth, imageLayout2.mHeight));
 				break;
 			case 3:
 				if (view == null) {
@@ -158,11 +147,6 @@ public class mAdapter extends BaseAdapter {
 				} else {
 					holder3 = (ViewHolder2) view.getTag(R.id.news_type3);
 				}
-				holder3.title.setText(newsItemList.get(i).getMap().get("title").toString());
-				holder3.author.setText(newsItemList.get(i).getMap().get("author").toString());
-				holder3.publishTime.setText(newsItemList.get(i).getMap().get("publishTime").toString());
-//				holder3.image.setImageResource((Integer) newsItemList.get(i).getMap().get("image"));
-				holder3.image.setImageBitmap(mImageConvert.decodeImage(view.getResources(), (Integer) newsItemList.get(i).getMap().get("image"), imageLayout3.mWidth, imageLayout3.mHeight));
 				break;
 			case 4:
 				if (view == null) {
@@ -190,13 +174,39 @@ public class mAdapter extends BaseAdapter {
 				} else {
 					holder4 = (ViewHolder3) view.getTag(R.id.news_type4);
 				}
+				break;
+			default:
+				break;
+		}
+		// 设置view内容
+		switch (type) {
+			case 0:
+				holder0.title.setText(newsItemList.get(i).getMap().get("title").toString());
+				holder0.author.setText(newsItemList.get(i).getMap().get("author").toString());
+				holder0.publishTime.setText(newsItemList.get(i).getMap().get("publishTime").toString());
+				break;
+			case 1:
+				holder1.title.setText(newsItemList.get(i).getMap().get("title").toString());
+				holder1.author.setText(newsItemList.get(i).getMap().get("author").toString());
+				holder1.publishTime.setText(newsItemList.get(i).getMap().get("publishTime").toString());
+				holder1.image.setImageBitmap(mImageConvert.decodeImage(view.getResources(), (Integer) newsItemList.get(i).getMap().get("image"), imageLayout1.mWidth, imageLayout1.mHeight));
+				break;
+			case 2:
+				holder2.title.setText(newsItemList.get(i).getMap().get("title").toString());
+				holder2.author.setText(newsItemList.get(i).getMap().get("author").toString());
+				holder2.publishTime.setText(newsItemList.get(i).getMap().get("publishTime").toString());
+				holder2.image.setImageBitmap(mImageConvert.decodeImage(view.getResources(), (Integer) newsItemList.get(i).getMap().get("image"), imageLayout2.mWidth, imageLayout2.mHeight));
+				break;
+			case 3:
+				holder3.title.setText(newsItemList.get(i).getMap().get("title").toString());
+				holder3.author.setText(newsItemList.get(i).getMap().get("author").toString());
+				holder3.publishTime.setText(newsItemList.get(i).getMap().get("publishTime").toString());
+				holder3.image.setImageBitmap(mImageConvert.decodeImage(view.getResources(), (Integer) newsItemList.get(i).getMap().get("image"), imageLayout3.mWidth, imageLayout3.mHeight));
+				break;
+			case 4:
 				holder4.title.setText(newsItemList.get(i).getMap().get("title").toString());
 				holder4.author.setText(newsItemList.get(i).getMap().get("author").toString());
 				holder4.publishTime.setText(newsItemList.get(i).getMap().get("publishTime").toString());
-//				holder4.image1.setImageResource((Integer) newsItemList.get(i).getMap().get("image1"));
-//				holder4.image2.setImageResource((Integer) newsItemList.get(i).getMap().get("image2"));
-//				holder4.image3.setImageResource((Integer) newsItemList.get(i).getMap().get("image3"));
-//				holder4.image4.setImageResource((Integer) newsItemList.get(i).getMap().get("image4"));
 				holder4.image1.setImageBitmap(mImageConvert.decodeImage(view.getResources(), (Integer) newsItemList.get(i).getMap().get("image1"), imageLayout4.mWidth, imageLayout4.mHeight));
 				holder4.image2.setImageBitmap(mImageConvert.decodeImage(view.getResources(), (Integer) newsItemList.get(i).getMap().get("image2"), imageLayout4.mWidth, imageLayout4.mHeight));
 				holder4.image3.setImageBitmap(mImageConvert.decodeImage(view.getResources(), (Integer) newsItemList.get(i).getMap().get("image3"), imageLayout4.mWidth, imageLayout4.mHeight));

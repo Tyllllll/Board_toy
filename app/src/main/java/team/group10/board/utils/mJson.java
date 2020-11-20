@@ -20,7 +20,7 @@ import java.io.InputStreamReader;
  * @Version: 1.0
  */
 public class mJson {
-	public static String getJson(String filename, Activity activity) {
+	public static String getJsonFromDotJson(String filename, Activity activity) {
 		StringBuilder stringBuilder = new StringBuilder();
 		try {
 			AssetManager assetManager = activity.getAssets();
