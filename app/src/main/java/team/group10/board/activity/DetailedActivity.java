@@ -42,7 +42,7 @@ public class DetailedActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_detailed);
 
 		loadingProgressBar = findViewById(R.id.loading);
-		loadingProgressBar.setVisibility(View.VISIBLE);
+//		loadingProgressBar.setVisibility(View.VISIBLE);
 
 		Intent superIntent = getIntent();
 		titleTxv = findViewById(R.id.news_title);
@@ -114,10 +114,12 @@ public class DetailedActivity extends AppCompatActivity {
 						e.printStackTrace();
 					}
 				} else {
-					// token失效应该在这里
+					// token失效应该在这里，暂定跳转login界面点一下login
 					Looper.prepare();
-					Toast.makeText(DetailedActivity.this, response.body().string(), Toast.LENGTH_SHORT).show();
+					Toast.makeText(DetailedActivity.this, response.body().string() + "\n please login again", Toast.LENGTH_SHORT).show();
 					Looper.loop();
+
+					startActivity(new Intent(DetailedActivity.this, LoginActivity.class));
 				}
 			}
 		});

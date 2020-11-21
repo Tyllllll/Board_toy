@@ -64,6 +64,11 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher {
 		passwordEditText.addTextChangedListener(this);
 
 		loadingProgressBar = findViewById(R.id.loading);
+
+		if (userInfo.getUsername().length() > 0 && userInfo.getPassword().length() > 0) {
+			usernameEditText.setText(userInfo.getUsername());
+			passwordEditText.setText(userInfo.getPassword());
+		}
 	}
 
 	public void btn_login(View view) {
@@ -112,8 +117,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher {
 							public void run() {
 								Toast.makeText(LoginActivity.this, "login success!", Toast.LENGTH_SHORT).show();
 								// 跳转回detailed
-								Intent forDetailedIt = new Intent();
-								setResult(RESULT_OK, forDetailedIt);
+								setResult(RESULT_OK);
 								loadingProgressBar.setVisibility(View.GONE);
 								finish();
 							}
