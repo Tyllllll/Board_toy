@@ -1,15 +1,14 @@
 package team.group10.board.activity;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,6 +40,7 @@ import team.group10.board.utils.mString;
 public class ContentActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
 	UserInfo userInfo;
+	List<NewsItem> newsItemList;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,7 @@ public class ContentActivity extends AppCompatActivity implements AdapterView.On
 		setContentView(R.layout.activity_content);
 
 		final ListView listView;
-		List<NewsItem> newsItemList = new ArrayList<>();
+		newsItemList = new ArrayList<>();
 		JSONObject newsJson;
 		HashMap<String, Object> map;
 		String newsString = mJson.getJsonFromDotJson("metadata.json", this);
@@ -77,6 +77,7 @@ public class ContentActivity extends AppCompatActivity implements AdapterView.On
 				map.put("title", newsJson.getString("title"));
 				map.put("author", newsJson.getString("author"));
 				map.put("publishTime", newsJson.getString("publishTime"));
+				map.put("id", newsJson.getString("id"));
 				newsItemList.add(new NewsItem(type, map));
 			}
 
@@ -89,22 +90,27 @@ public class ContentActivity extends AppCompatActivity implements AdapterView.On
 		listView.setOnItemClickListener(this);
 
 		SharedPreferences login_info = getSharedPreferences("userInfoPreferences", MODE_PRIVATE);
-		userInfo = new UserInfo(login_info.getString("username", ""), login_info.getString("password", ""), login_info.getString("token", ""));
+		userInfo = (UserInfo) getApplication();
+		userInfo.setUsername(login_info.getString("username", ""));
+		userInfo.setPassword(login_info.getString("password", ""));
+		userInfo.setToken(login_info.getString("token", ""));
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-		if (userInfo.getUsername().length() > 0 && userInfo.getToken().length() > 0) {
-			// 有登录信息的，直接发news的json和登录信息
-			Toast.makeText(this, "跳转查看详情", Toast.LENGTH_SHORT).show();
-		} else {
-			// 没有登录信息的，跳转登录页面去登录,同时也要发送news的json，登陆成功后直接进详情
-			Intent intent = new Intent(this, LoginActivity.class);
-			intent.putExtra("username", userInfo.getUsername());
-			intent.putExtra("password", userInfo.getPassword());
-			intent.putExtra("token", userInfo.getToken());
-			startActivity(intent);
-		}
-		System.out.println("i: " + i + ". l: " + l);
+		// 管他鸟的直接进detailed，在里面判断有没有登录信息，这样的话能直接finish到detailed页面
+		Intent intent = new Intent(this, DetailedActivity.class);
+		intent.putExtra("id", (String) newsItemList.get(i).getMap().get("id"));
+		intent.putExtra("title", (String) newsItemList.get(i).getMap().get("title"));
+		intent.putExtra("author", (String) newsItemList.get(i).getMap().get("author"));
+		intent.putExtra("publishTime", (String) newsItemList.get(i).getMap().get("publishTime"));
+		startActivityForResult(intent, 100);
+	}
+
+	public void clearPreferences(View view) {
+		SharedPreferences.Editor editor = getSharedPreferences("userInfoPreferences", MODE_PRIVATE).edit();
+		editor.clear();
+		editor.commit();
+		userInfo.clear();
 	}
 }

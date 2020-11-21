@@ -1,11 +1,10 @@
 package team.group10.board.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,6 +43,7 @@ import team.group10.board.model.UserInfo;
  */
 public class LoginActivity extends AppCompatActivity implements TextWatcher {
 
+	UserInfo userInfo;
 	EditText usernameEditText;
 	EditText passwordEditText;
 	Button loginButton;
@@ -55,7 +55,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher {
 		setContentView(R.layout.activity_login);
 
 		SharedPreferences sharedPreferences = getSharedPreferences("userInfoPreferences", MODE_PRIVATE);
-		UserInfo userInfo = new UserInfo(sharedPreferences.getString("username", ""), sharedPreferences.getString("password", ""), sharedPreferences.getString("token", ""));
+		userInfo = (UserInfo)getApplication();
 
 		usernameEditText = findViewById(R.id.username);
 		passwordEditText = findViewById(R.id.password);
@@ -68,11 +68,20 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher {
 
 	public void btn_login(View view) {
 		loadingProgressBar.setVisibility(View.VISIBLE);
+		String username = usernameEditText.getText().toString();
+		String password = passwordEditText.getText().toString();
+		userInfo.setUsername(username);
+		userInfo.setPassword(password);
+		// 缓存数据
+		SharedPreferences.Editor sharedPreferences = getSharedPreferences("userInfoPreferences", MODE_PRIVATE).edit();
+		sharedPreferences.putString("username", username);
+		sharedPreferences.putString("password", password);
+		sharedPreferences.apply();
 		// 发送网络请求
 		OkHttpClient client = new OkHttpClient();
 		FormBody formBody = new FormBody.Builder()
-				.add("username", usernameEditText.getText().toString())
-				.add("password", passwordEditText.getText().toString())
+				.add("username", username)
+				.add("password", password)
 				.build();
 		Request request = new Request.Builder().url(this.getString(R.string.login_url)).post(formBody).build();
 		client.newCall(request).enqueue(new Callback() {
@@ -91,20 +100,22 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher {
 			@Override
 			public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
 				try {
-					// 缓存数据
-					SharedPreferences.Editor sharedPreferences = getSharedPreferences("userInfoPreferences", MODE_PRIVATE).edit();
-					sharedPreferences.putString("username", usernameEditText.getText().toString());
-					sharedPreferences.putString("password", passwordEditText.getText().toString());
 					if (response.isSuccessful()) {
 						JSONObject responseJson = new JSONObject(response.body().string());
 						// 这里拿到token，和username一起存sharedPreference
-						sharedPreferences.putString("token", responseJson.getString("token"));
+						String token = responseJson.getString("token");
+						userInfo.setToken(token);
+						sharedPreferences.putString("token", token);
+						sharedPreferences.apply();
 						LoginActivity.this.runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
+								Toast.makeText(LoginActivity.this, "login success!", Toast.LENGTH_SHORT).show();
+								// 跳转回detailed
+								Intent forDetailedIt = new Intent();
+								setResult(RESULT_OK, forDetailedIt);
 								loadingProgressBar.setVisibility(View.GONE);
-								Toast.makeText(LoginActivity.this, "login success!\n这里添加跳转下一界面", Toast.LENGTH_SHORT).show();
-								// 跳转到下一个activity
+								finish();
 							}
 						});
 					} else {
@@ -116,8 +127,6 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher {
 							}
 						});
 					}
-					// 缓存提交
-					sharedPreferences.commit();
 				}catch (JSONException e) {
 					e.printStackTrace();
 				}

@@ -1,5 +1,7 @@
 package team.group10.board.model;
 
+import android.app.Application;
+
 /**
  * @ProjectName: Board
  * @Package: team.group10.board.model
@@ -12,15 +14,15 @@ package team.group10.board.model;
  * @UpdateRemark: 更新说明：
  * @Version: 1.0
  */
-public class UserInfo {
+public class UserInfo extends Application {
 	private String username;
 	private String password;
 	private String token;
 
-	public UserInfo(String username, String password, String token) {
-		this.username = username;
-		this.password = password;
-		this.token = token;
+	public UserInfo() {
+		this.username = "";
+		this.password = "";
+		this.token = "";
 	}
 
 	public void setUsername(String username) {
@@ -45,5 +47,11 @@ public class UserInfo {
 
 	public String getToken() {
 		return token;
+	}
+
+	public void clear() {
+		this.username = "";
+		this.password = "";
+		this.token = "";
 	}
 }
