@@ -109,11 +109,13 @@ public class ContentActivity extends AppCompatActivity implements AdapterView.On
 
 	public void clearPreferences(View view) {
 		SharedPreferences.Editor editor = getSharedPreferences("userInfoPreferences", MODE_PRIVATE).edit();
-		userInfo.setToken("123456");
-		editor.putString("token", "123456");
-		editor.apply();
-//		editor.clear();
-//		editor.commit();
-//		userInfo.clear();
+		// 这是只清删token的
+//		editor.putString("token", "123456");
+//		editor.apply();
+//		userInfo.setToken("123456");
+		// 这是清除所有userInfo的
+		editor.clear();
+		editor.commit();
+		userInfo.clear();
 	}
 }
