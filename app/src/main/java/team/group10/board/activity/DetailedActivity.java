@@ -1,6 +1,7 @@
 package team.group10.board.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -20,11 +21,10 @@ import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.Response;
 import team.group10.board.R;
 import team.group10.board.model.UserInfo;
+import team.group10.board.utils.mHttpRequest;
 
 public class DetailedActivity extends AppCompatActivity {
 
@@ -42,7 +42,6 @@ public class DetailedActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_detailed);
 
 		loadingProgressBar = findViewById(R.id.loading);
-//		loadingProgressBar.setVisibility(View.VISIBLE);
 
 		Intent superIntent = getIntent();
 		titleTxv = findViewById(R.id.news_title);
@@ -80,11 +79,7 @@ public class DetailedActivity extends AppCompatActivity {
 	}
 
 	protected void getArticle() {
-		OkHttpClient client = new OkHttpClient();
-		Request request = new Request.Builder().url("https://vcapi.lvdaqian.cn/article/" + articleId)
-				.header("Authorization", "Bearer " + userInfo.getToken())
-				.build();
-		client.newCall(request).enqueue(new Callback() {
+		Callback getFirstCallback = new Callback() {
 			@Override
 			public void onFailure(@NotNull Call call, @NotNull IOException e) {
 				// 断开网络连接是进这里
@@ -115,13 +110,51 @@ public class DetailedActivity extends AppCompatActivity {
 					}
 				} else {
 					// token失效应该在这里，暂定跳转login界面点一下login
-					Looper.prepare();
-					Toast.makeText(DetailedActivity.this, response.body().string() + "\n please login again", Toast.LENGTH_SHORT).show();
-					Looper.loop();
+//					Looper.prepare();
+//					Toast.makeText(DetailedActivity.this, response.body().string() + "\n please login again", Toast.LENGTH_SHORT).show();
+//					Looper.loop();
+					Callback loseTokenLoginCallback = new Callback() {
+						@Override
+						public void onFailure(@NotNull Call call, @NotNull IOException e) {
+							// 其实可以不用写，断开网络连接是进上面的onFailure
+							DetailedActivity.this.runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									Toast.makeText(DetailedActivity.this, "network error", Toast.LENGTH_SHORT).show();
+									loadingProgressBar.setVisibility(View.GONE);
+								}
+							});
+						}
 
-					startActivity(new Intent(DetailedActivity.this, LoginActivity.class));
+						@Override
+						public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+							try {
+								if (response.isSuccessful()) {
+									JSONObject responseJson = new JSONObject(response.body().string());
+									// 这里拿到token，和username一起存sharedPreference
+									userInfo.setToken(responseJson.getString("token"));
+									SharedPreferences.Editor sharedPreferences = getSharedPreferences("userInfoPreferences", MODE_PRIVATE).edit();
+									sharedPreferences.putString("token", userInfo.getToken());
+									sharedPreferences.apply();
+									getArticle();
+								} else {
+									DetailedActivity.this.runOnUiThread(new Runnable() {
+										@Override
+										public void run() {
+											Toast.makeText(DetailedActivity.this, "network error. message: " + response.message() + ". code: " + response.code(), Toast.LENGTH_LONG).show();
+											loadingProgressBar.setVisibility(View.GONE);
+										}
+									});
+								}
+							}catch (JSONException e) {
+								e.printStackTrace();
+							}
+						}
+					};
+					mHttpRequest.postLogin(userInfo.getUsername(), userInfo.getPassword(), loseTokenLoginCallback);
 				}
 			}
-		});
+		};
+		mHttpRequest.getArticle(articleId, userInfo.getToken(), false, getFirstCallback);
 	}
 }

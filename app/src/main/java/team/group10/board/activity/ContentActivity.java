@@ -109,8 +109,11 @@ public class ContentActivity extends AppCompatActivity implements AdapterView.On
 
 	public void clearPreferences(View view) {
 		SharedPreferences.Editor editor = getSharedPreferences("userInfoPreferences", MODE_PRIVATE).edit();
-		editor.clear();
-		editor.commit();
-		userInfo.clear();
+		userInfo.setToken("123456");
+		editor.putString("token", "123456");
+		editor.apply();
+//		editor.clear();
+//		editor.commit();
+//		userInfo.clear();
 	}
 }

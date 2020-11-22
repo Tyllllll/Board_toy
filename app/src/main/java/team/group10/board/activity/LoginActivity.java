@@ -1,6 +1,5 @@
 package team.group10.board.activity;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
@@ -22,12 +21,10 @@ import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.Response;
 import team.group10.board.R;
 import team.group10.board.model.UserInfo;
+import team.group10.board.utils.mHttpRequest;
 
 /**
  * @ProjectName: Board
@@ -73,23 +70,15 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher {
 
 	public void btn_login(View view) {
 		loadingProgressBar.setVisibility(View.VISIBLE);
-		String username = usernameEditText.getText().toString();
-		String password = passwordEditText.getText().toString();
-		userInfo.setUsername(username);
-		userInfo.setPassword(password);
+		userInfo.setUsername(usernameEditText.getText().toString());
+		userInfo.setPassword(passwordEditText.getText().toString());
 		// 缓存数据
 		SharedPreferences.Editor sharedPreferences = getSharedPreferences("userInfoPreferences", MODE_PRIVATE).edit();
-		sharedPreferences.putString("username", username);
-		sharedPreferences.putString("password", password);
+		sharedPreferences.putString("username", userInfo.getUsername());
+		sharedPreferences.putString("password", userInfo.getPassword());
 		sharedPreferences.apply();
-		// 发送网络请求
-		OkHttpClient client = new OkHttpClient();
-		FormBody formBody = new FormBody.Builder()
-				.add("username", username)
-				.add("password", password)
-				.build();
-		Request request = new Request.Builder().url(this.getString(R.string.login_url)).post(formBody).build();
-		client.newCall(request).enqueue(new Callback() {
+		// 实现回调函数
+		Callback loginCallback = new Callback() {
 			@Override
 			public void onFailure(@NotNull Call call, @NotNull IOException e) {
 				// 断开网络连接是进这里
@@ -108,9 +97,8 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher {
 					if (response.isSuccessful()) {
 						JSONObject responseJson = new JSONObject(response.body().string());
 						// 这里拿到token，和username一起存sharedPreference
-						String token = responseJson.getString("token");
-						userInfo.setToken(token);
-						sharedPreferences.putString("token", token);
+						userInfo.setToken(responseJson.getString("token"));
+						sharedPreferences.putString("token", userInfo.getToken());
 						sharedPreferences.apply();
 						LoginActivity.this.runOnUiThread(new Runnable() {
 							@Override
@@ -135,7 +123,9 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher {
 					e.printStackTrace();
 				}
 			}
-		});
+		};
+		// 发送网络请求
+		mHttpRequest.postLogin(userInfo.getUsername(), userInfo.getPassword(), loginCallback);
 	}
 
 	@Override
