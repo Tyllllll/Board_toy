@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -109,13 +110,18 @@ public class ContentActivity extends AppCompatActivity implements AdapterView.On
 
 	public void clearPreferences(View view) {
 		SharedPreferences.Editor editor = getSharedPreferences("userInfoPreferences", MODE_PRIVATE).edit();
-		// 这是只清删token的
-//		editor.putString("token", "123456");
-//		editor.apply();
-//		userInfo.setToken("123456");
-		// 这是清除所有userInfo的
 		editor.clear();
 		editor.commit();
 		userInfo.clear();
+		Toast.makeText(this, "userInfo has been cleared", Toast.LENGTH_SHORT).show();
+	}
+
+	public void changeToken(View v) {
+		SharedPreferences.Editor editor = getSharedPreferences("userInfoPreferences", MODE_PRIVATE).edit();
+		// 这是只清删token的
+		editor.putString("token", "123456");
+		editor.apply();
+		userInfo.setToken("123456");
+		Toast.makeText(this, "token has been changed to invalid", Toast.LENGTH_SHORT).show();
 	}
 }

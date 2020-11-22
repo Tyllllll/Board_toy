@@ -20,6 +20,20 @@
 		app:layout_constraintTop_toTopOf="@+id/linearLayout2"
 		app:layout_constraintVertical_bias="0.0" />
 
+	<Button
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="20dp"
+		android:layout_marginTop="15dp"
+		android:onClick="changeToken"
+		android:text="token"
+		app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"
+		app:layout_constraintEnd_toEndOf="@+id/linearLayout2"
+		app:layout_constraintHorizontal_bias="0.0"
+		app:layout_constraintStart_toStartOf="@+id/linearLayout2"
+		app:layout_constraintTop_toTopOf="@+id/linearLayout2"
+		app:layout_constraintVertical_bias="0.0" />
+
 	<LinearLayout
 		android:id="@+id/linearLayout2"
 		android:layout_width="match_parent"
