@@ -109,10 +109,7 @@ public class DetailedActivity extends AppCompatActivity {
 						e.printStackTrace();
 					}
 				} else {
-					// token失效应该在这里，暂定跳转login界面点一下login
-//					Looper.prepare();
-//					Toast.makeText(DetailedActivity.this, response.body().string() + "\n please login again", Toast.LENGTH_SHORT).show();
-//					Looper.loop();
+					// token失效应该在这里，傻瓜式login拿token再请求article
 					Callback loseTokenLoginCallback = new Callback() {
 						@Override
 						public void onFailure(@NotNull Call call, @NotNull IOException e) {
