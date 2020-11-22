@@ -4,8 +4,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import team.group10.board.R;
-
 /**
  * @ProjectName: Board
  * @Package: team.group10.board.utils
