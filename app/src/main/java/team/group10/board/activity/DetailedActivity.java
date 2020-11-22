@@ -77,7 +77,7 @@ public class DetailedActivity extends AppCompatActivity {
 		}
 	}
 
-	protected void getArticle() {
+	private void getArticle() {
 		Callback getFirstCallback = new Callback() {
 			@Override
 			public void onFailure(@NotNull Call call, @NotNull IOException e) {
