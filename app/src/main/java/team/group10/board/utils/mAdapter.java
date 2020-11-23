@@ -1,12 +1,18 @@
 package team.group10.board.utils;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import java.util.List;
 
@@ -30,6 +36,11 @@ public class mAdapter extends BaseAdapter {
 	private List<NewsItem> newsItemList;
 	private LayoutInflater layoutInflater;
 	private UserInfo userInfo;
+	ViewHolder1 holder0 = null;
+	ViewHolder2 holder1 = null;
+	ViewHolder2 holder2 = null;
+	ViewHolder2 holder3 = null;
+	ViewHolder3 holder4 = null;
 
 	public mAdapter(Context context, List<NewsItem> newsItemList, UserInfo userInfo) {
 		this.newsItemList = newsItemList;
@@ -54,11 +65,6 @@ public class mAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int i, View view, ViewGroup viewGroup) {
-		ViewHolder1 holder0 = null;
-		ViewHolder2 holder1 = null;
-		ViewHolder2 holder2 = null;
-		ViewHolder2 holder3 = null;
-		ViewHolder3 holder4 = null;
 		final ImageSize imageLayout1 = new ImageSize(userInfo.getScreenWidth() / 5, userInfo.getScreenWidth() / 5);
 		final ImageSize imageLayout2 = new ImageSize(userInfo.getScreenWidth() / 5, userInfo.getScreenWidth() / 5);
 		final ImageSize imageLayout3 = new ImageSize(userInfo.getScreenWidth(), (int)(userInfo.getScreenWidth() * 0.618));
@@ -179,6 +185,7 @@ public class mAdapter extends BaseAdapter {
 				break;
 		}
 		// 设置view内容
+		View finalView = view;
 		switch (type) {
 			case 0:
 				holder0.title.setText(newsItemList.get(i).getMap().get("title").toString());
@@ -189,34 +196,123 @@ public class mAdapter extends BaseAdapter {
 				holder1.title.setText(newsItemList.get(i).getMap().get("title").toString());
 				holder1.author.setText(newsItemList.get(i).getMap().get("author").toString());
 				holder1.publishTime.setText(newsItemList.get(i).getMap().get("publishTime").toString());
-				holder1.image.setImageBitmap(mImageConvert.decodeImage(view.getResources(), (Integer) newsItemList.get(i).getMap().get("image"), imageLayout1.mWidth, imageLayout1.mHeight));
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						Message msg = Message.obtain();
+						msg.obj = mImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image"), imageLayout1.mWidth, imageLayout1.mHeight);
+						msg.what = 1;
+						handler.sendMessage(msg);
+					}
+				}).start();
 				break;
 			case 2:
 				holder2.title.setText(newsItemList.get(i).getMap().get("title").toString());
 				holder2.author.setText(newsItemList.get(i).getMap().get("author").toString());
 				holder2.publishTime.setText(newsItemList.get(i).getMap().get("publishTime").toString());
-				holder2.image.setImageBitmap(mImageConvert.decodeImage(view.getResources(), (Integer) newsItemList.get(i).getMap().get("image"), imageLayout2.mWidth, imageLayout2.mHeight));
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						Message msg = Message.obtain();
+						msg.obj = mImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image"), imageLayout2.mWidth, imageLayout2.mHeight);
+						msg.what = 2;
+						handler.sendMessage(msg);
+					}
+				}).start();
+//				holder2.image.setImageBitmap(mImageConvert.decodeImage(view.getResources(), (Integer) newsItemList.get(i).getMap().get("image"), imageLayout3.mWidth, imageLayout3.mHeight));
 				break;
 			case 3:
 				holder3.title.setText(newsItemList.get(i).getMap().get("title").toString());
 				holder3.author.setText(newsItemList.get(i).getMap().get("author").toString());
 				holder3.publishTime.setText(newsItemList.get(i).getMap().get("publishTime").toString());
-				holder3.image.setImageBitmap(mImageConvert.decodeImage(view.getResources(), (Integer) newsItemList.get(i).getMap().get("image"), imageLayout3.mWidth, imageLayout3.mHeight));
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						Message msg = Message.obtain();
+						msg.obj = mImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image"), imageLayout3.mWidth, imageLayout3.mHeight);
+						msg.what = 3;
+						handler.sendMessage(msg);
+					}
+				}).start();
 				break;
 			case 4:
 				holder4.title.setText(newsItemList.get(i).getMap().get("title").toString());
 				holder4.author.setText(newsItemList.get(i).getMap().get("author").toString());
 				holder4.publishTime.setText(newsItemList.get(i).getMap().get("publishTime").toString());
-				holder4.image1.setImageBitmap(mImageConvert.decodeImage(view.getResources(), (Integer) newsItemList.get(i).getMap().get("image1"), imageLayout4.mWidth, imageLayout4.mHeight));
-				holder4.image2.setImageBitmap(mImageConvert.decodeImage(view.getResources(), (Integer) newsItemList.get(i).getMap().get("image2"), imageLayout4.mWidth, imageLayout4.mHeight));
-				holder4.image3.setImageBitmap(mImageConvert.decodeImage(view.getResources(), (Integer) newsItemList.get(i).getMap().get("image3"), imageLayout4.mWidth, imageLayout4.mHeight));
-				holder4.image4.setImageBitmap(mImageConvert.decodeImage(view.getResources(), (Integer) newsItemList.get(i).getMap().get("image4"), imageLayout4.mWidth, imageLayout4.mHeight));
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						Message msg = Message.obtain();
+						msg.obj = mImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image1"), imageLayout4.mWidth, imageLayout4.mHeight);
+						msg.what = 4;
+						handler.sendMessage(msg);
+					}
+				}).start();
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						Message msg = Message.obtain();
+						msg.obj = mImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image2"), imageLayout4.mWidth, imageLayout4.mHeight);
+						msg.what = 5;
+						handler.sendMessage(msg);
+					}
+				}).start();
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						Message msg = Message.obtain();
+						msg.obj = mImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image3"), imageLayout4.mWidth, imageLayout4.mHeight);
+						msg.what = 6;
+						handler.sendMessage(msg);
+					}
+				}).start();
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						Message msg = Message.obtain();
+						msg.obj = mImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image4"), imageLayout4.mWidth, imageLayout4.mHeight);
+						msg.what = 7;
+						handler.sendMessage(msg);
+					}
+				}).start();
 				break;
 			default:
 				break;
 		}
 		return view;
 	}
+
+	private Handler handler = new Handler(Looper.getMainLooper()) {
+		@Override
+		public void handleMessage(@NonNull Message msg) {
+			super.handleMessage(msg);
+			switch (msg.what) {
+				case 1:
+					holder1.image.setImageBitmap((Bitmap)msg.obj);
+					break;
+				case 2:
+					holder2.image.setImageBitmap((Bitmap)msg.obj);
+					break;
+				case 3:
+					holder3.image.setImageBitmap((Bitmap)msg.obj);
+					break;
+				case 4:
+					holder4.image1.setImageBitmap((Bitmap)msg.obj);
+					break;
+				case 5:
+					holder4.image2.setImageBitmap((Bitmap)msg.obj);
+					break;
+				case 6:
+					holder4.image3.setImageBitmap((Bitmap)msg.obj);
+					break;
+				case 7:
+					holder4.image4.setImageBitmap((Bitmap)msg.obj);
+					break;
+				default:
+					break;
+			}
+		}
+	};
 }
 
 class ViewHolder1 {
