@@ -12,6 +12,7 @@ import java.util.List;
 
 import team.group10.board.R;
 import team.group10.board.model.NewsItem;
+import team.group10.board.model.UserInfo;
 
 /**
  * @ProjectName: Board
@@ -28,10 +29,12 @@ import team.group10.board.model.NewsItem;
 public class mAdapter extends BaseAdapter {
 	private List<NewsItem> newsItemList;
 	private LayoutInflater layoutInflater;
+	private UserInfo userInfo;
 
-	public mAdapter(Context context, List<NewsItem> newsItemList) {
+	public mAdapter(Context context, List<NewsItem> newsItemList, UserInfo userInfo) {
 		this.newsItemList = newsItemList;
 		layoutInflater = LayoutInflater.from(context);
+		this.userInfo = userInfo;
 	}
 
 	@Override
@@ -56,10 +59,10 @@ public class mAdapter extends BaseAdapter {
 		ViewHolder2 holder2 = null;
 		ViewHolder2 holder3 = null;
 		ViewHolder3 holder4 = null;
-		final ImageSize imageLayout1 = new ImageSize(200, 200);
-		final ImageSize imageLayout2 = new ImageSize(200, 200);
-		final ImageSize imageLayout3 = new ImageSize(1000, 400);
-		final ImageSize imageLayout4 = new ImageSize(200, 200);
+		final ImageSize imageLayout1 = new ImageSize(userInfo.getScreenWidth() / 5, userInfo.getScreenWidth() / 5);
+		final ImageSize imageLayout2 = new ImageSize(userInfo.getScreenWidth() / 5, userInfo.getScreenWidth() / 5);
+		final ImageSize imageLayout3 = new ImageSize(userInfo.getScreenWidth(), (int)(userInfo.getScreenWidth() * 0.618));
+		final ImageSize imageLayout4 = new ImageSize(userInfo.getScreenWidth() / 5, userInfo.getScreenWidth() / 5);
 		final int type = newsItemList.get(i).getType();
 		// 判断view的布局类型
 		switch (type) {

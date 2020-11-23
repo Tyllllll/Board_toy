@@ -2,21 +2,29 @@ package team.group10.board.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.text.Html;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -24,6 +32,7 @@ import okhttp3.Response;
 import team.group10.board.R;
 import team.group10.board.model.UserInfo;
 import team.group10.board.utils.mHttpRequest;
+import team.group10.board.utils.mString;
 
 public class DetailedActivity extends AppCompatActivity {
 
@@ -97,13 +106,91 @@ public class DetailedActivity extends AppCompatActivity {
 					try {
 						JSONObject articleJson = new JSONObject(response.body().string());
 						String body = articleJson.getString("data");
-						DetailedActivity.this.runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								bodyTxv.setText(body);
-								loadingProgressBar.setVisibility(View.GONE);
+						String imageName = "";
+						StringBuffer newBody;
+						// 匹配MD格式的图片格式
+						Pattern pattern = Pattern.compile("!\\[.*\\]\\(.*\\)");
+						Matcher matcher = pattern.matcher(body);
+						if (matcher.find()) {
+							// 原文本中的起始位置
+							int start = matcher.start();
+							int end = matcher.end();
+							newBody = new StringBuffer();
+							// 把md中图片后插入一个\n，note：这里是服务器返回数据的一个bug
+							newBody.append(body.substring(0, matcher.end())).append("\n").append(body.substring(matcher.end(), body.length()));
+//							// 如果[]之间没有图片alt，则加入一个image
+							// 匹配[]
+//							pattern = Pattern.compile("\\[.*\\]");
+//							matcher = pattern.matcher(temp);
+//							if (matcher.find()) {
+//								if (matcher.end() - matcher.start() < 3) {
+//									newBody.insert(start + 2, "cover");
+//								}
+//							}
+							// 感叹号前插一个\n，note：这不知道是commonmark的bug还是服务器传回数据的bug，前面不加换行就识别不到是图片
+							newBody.insert(start - 1, "\n");
+							start += 1;
+							end += 1;
+							// 匹配图片名称，note：由于已知article里只会有一张图片，所以这里没有扩充匹配多张图片的过程
+							String temp = body.substring(matcher.start(), matcher.end());
+							pattern = Pattern.compile("\\(.*\\.");
+							matcher = pattern.matcher(temp);
+							if (matcher.find())
+							{
+								imageName = temp.substring(matcher.start() + 1, matcher.end() - 1).toLowerCase();
 							}
-						});
+							// 将图片名称替换为本地资源，即R.drawable.imageName
+							// 匹配小括号，思路：获取temp中图片名的长度（带后缀），然后在newBody中替换
+							pattern = Pattern.compile("\\(.*\\)");
+							matcher = pattern.matcher(temp);
+							if (matcher.find())
+							{
+								int imagePathLength = matcher.end() - matcher.start() - 2;
+								newBody.replace(end - 1 - imagePathLength, end - 1, String.valueOf(mString.getResId(imageName, R.drawable.class)));
+							}
+						} else {
+							newBody = new StringBuffer(body);
+						}
+						// md to html
+						Parser parser = Parser.builder().build();
+						Node document = parser.parse(newBody.toString());
+						HtmlRenderer renderer = HtmlRenderer.builder().build();
+						String html = renderer.render(document);
+						if (imageName.length() > 0) {
+							// 有图片
+							DetailedActivity.this.runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									// 显示带图片的文本
+									bodyTxv.setText(Html.fromHtml(html, new Html.ImageGetter() {
+										@Override
+										public Drawable getDrawable(String s) {
+											int id = Integer.parseInt(s);
+											Drawable drawable = DetailedActivity.this.getResources().getDrawable(id, null);
+											int width = drawable.getIntrinsicWidth();
+											int height = drawable.getIntrinsicHeight();
+											// 计算等比放缩比例，让图片高度小于500，宽度小于1000；
+											float heightRatio = (float)height / (userInfo.getScreenWidth() * (float)0.618);
+											float widthRatio =  (float)width / userInfo.getScreenWidth();
+											float ratio = Math.max(heightRatio, widthRatio);
+											drawable.setBounds(0, 0, (int)(width / ratio), (int)(height / ratio));
+											return drawable;
+										}
+									}, null), null);
+									loadingProgressBar.setVisibility(View.GONE);
+								}
+							});
+						} else {
+							// 没有图片
+							DetailedActivity.this.runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									// 显示文本
+									bodyTxv.setText(Html.fromHtml(html, 0));
+									loadingProgressBar.setVisibility(View.GONE);
+								}
+							});
+						}
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
@@ -151,6 +238,6 @@ public class DetailedActivity extends AppCompatActivity {
 				}
 			}
 		};
-		mHttpRequest.getArticle(articleId, userInfo.getToken(), false, getFirstCallback);
+		mHttpRequest.getArticle(articleId, userInfo.getToken(), true, getFirstCallback);
 	}
 }

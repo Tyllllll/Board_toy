@@ -18,6 +18,8 @@ public class UserInfo extends Application {
 	private String username;
 	private String password;
 	private String token;
+	private int ScreenWidth;
+	private int ScreenHeight;
 
 	public UserInfo() {
 		this.username = "";
@@ -37,6 +39,14 @@ public class UserInfo extends Application {
 		this.token = token;
 	}
 
+	public void setScreenWidth(int screenWidth) {
+		ScreenWidth = screenWidth;
+	}
+
+	public void setScreenHeight(int screenHeight) {
+		ScreenHeight = screenHeight;
+	}
+
 	public String getUsername() {
 		return username;
 	}
@@ -47,6 +57,14 @@ public class UserInfo extends Application {
 
 	public String getToken() {
 		return token;
+	}
+
+	public int getScreenWidth() {
+		return ScreenWidth;
+	}
+
+	public int getScreenHeight() {
+		return ScreenHeight;
 	}
 
 	public void clear() {

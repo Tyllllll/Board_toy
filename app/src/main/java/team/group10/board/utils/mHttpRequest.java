@@ -33,8 +33,9 @@ public class mHttpRequest {
 
 	public static void getArticle(String articleId, String token, boolean isMarkdown, Callback callback) {
 		OkHttpClient client = new OkHttpClient();
+		System.out.println("https://vcapi.lvdaqian.cn/article/" + articleId + "?markdown=" + isMarkdown);
 		Request request = new Request.Builder()
-				.url("https://vcapi.lvdaqian.cn/article/" + articleId)
+				.url("https://vcapi.lvdaqian.cn/article/" + articleId + "?markdown=" + isMarkdown)
 				.header("Authorization", "Bearer " + token)
 				.build();
 		client.newCall(request).enqueue(callback);

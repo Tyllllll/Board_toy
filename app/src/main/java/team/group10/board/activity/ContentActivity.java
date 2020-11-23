@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -47,6 +49,13 @@ public class ContentActivity extends AppCompatActivity implements AdapterView.On
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_content);
 
+		userInfo = (UserInfo) getApplication();
+		Display display = this.getWindowManager().getDefaultDisplay();
+		Point point = new Point();
+		display.getSize(point);
+		userInfo.setScreenWidth(point.x);
+		userInfo.setScreenHeight(point.y);
+
 		final ListView listView;
 		newsItemList = new ArrayList<>();
 		JSONObject newsJson;
@@ -86,11 +95,10 @@ public class ContentActivity extends AppCompatActivity implements AdapterView.On
 		}
 
 		listView = findViewById(R.id.news_item);
-		listView.setAdapter(new mAdapter(this, newsItemList));
+		listView.setAdapter(new mAdapter(this, newsItemList, userInfo));
 		listView.setOnItemClickListener(this);
 
 		SharedPreferences login_info = getSharedPreferences("userInfoPreferences", MODE_PRIVATE);
-		userInfo = (UserInfo) getApplication();
 		userInfo.setUsername(login_info.getString("username", ""));
 		userInfo.setPassword(login_info.getString("password", ""));
 		userInfo.setToken(login_info.getString("token", ""));
