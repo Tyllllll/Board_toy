@@ -164,7 +164,7 @@ public class DetailedActivity extends AppCompatActivity {
 								@Override
 								public void run() {
 									// 显示带图片的文本
-									bodyTxv.setText(Html.fromHtml(html, new Html.ImageGetter() {
+									bodyTxv.setText(Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY, new Html.ImageGetter() {
 										@Override
 										public Drawable getDrawable(String s) {
 											int id = Integer.parseInt(s);
