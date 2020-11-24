@@ -40,4 +40,22 @@ public class mImageConvert {
 		}
 		return inSampleSize;
 	}
+
+	public static int getWidth(Resources resources, int resId) {
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		// 只读图片的文件信息，不加载图像文件
+		options.inJustDecodeBounds = true;
+		options.inPreferredConfig = Bitmap.Config.RGB_565;
+		BitmapFactory.decodeResource(resources, resId, options);
+		return options.outWidth;
+	}
+
+	public static int getHeight(Resources resources, int resId) {
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		// 只读图片的文件信息，不加载图像文件
+		options.inJustDecodeBounds = true;
+		options.inPreferredConfig = Bitmap.Config.RGB_565;
+		BitmapFactory.decodeResource(resources, resId, options);
+		return options.outHeight;
+	}
 }

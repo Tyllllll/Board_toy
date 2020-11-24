@@ -219,7 +219,6 @@ public class mAdapter extends BaseAdapter {
 						handler.sendMessage(msg);
 					}
 				}).start();
-//				holder2.image.setImageBitmap(mImageConvert.decodeImage(view.getResources(), (Integer) newsItemList.get(i).getMap().get("image"), imageLayout3.mWidth, imageLayout3.mHeight));
 				break;
 			case 3:
 				holder3.title.setText(newsItemList.get(i).getMap().get("title").toString());

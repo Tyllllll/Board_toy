@@ -2,6 +2,7 @@ package team.group10.board.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
@@ -33,6 +34,7 @@ import team.group10.board.R;
 import team.group10.board.model.UserInfo;
 import team.group10.board.utils.mHttpRequest;
 import team.group10.board.utils.mString;
+import team.group10.board.utils.mImageConvert;
 
 public class DetailedActivity extends AppCompatActivity {
 
@@ -166,13 +168,15 @@ public class DetailedActivity extends AppCompatActivity {
 										@Override
 										public Drawable getDrawable(String s) {
 											int id = Integer.parseInt(s);
-											Drawable drawable = DetailedActivity.this.getResources().getDrawable(id, null);
-											int width = drawable.getIntrinsicWidth();
-											int height = drawable.getIntrinsicHeight();
-											// 计算等比放缩比例，让图片高度小于500，宽度小于1000；
+											int width = mImageConvert.getWidth(DetailedActivity.this.getResources(), id);
+											int height = mImageConvert.getHeight(DetailedActivity.this.getResources(), id);
+											// 计算等比放缩比例
 											float heightRatio = (float)height / (userInfo.getScreenWidth() * (float)0.618);
 											float widthRatio =  (float)width / userInfo.getScreenWidth();
 											float ratio = Math.max(heightRatio, widthRatio);
+											BitmapDrawable drawable = new BitmapDrawable(DetailedActivity.this.getResources()
+													, mImageConvert.decodeImage(DetailedActivity.this.getResources()
+													, id, (int)(width / ratio), (int)(height / ratio)));
 											drawable.setBounds(0, 0, (int)(width / ratio), (int)(height / ratio));
 											return drawable;
 										}
