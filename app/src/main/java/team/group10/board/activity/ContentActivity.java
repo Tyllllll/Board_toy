@@ -49,6 +49,8 @@ public class ContentActivity extends AppCompatActivity implements AdapterView.On
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_content);
 
+		startActivity(new Intent(this, WelcomeActivity.class));
+
 		userInfo = (UserInfo) getApplication();
 		Display display = this.getWindowManager().getDefaultDisplay();
 		Point point = new Point();
