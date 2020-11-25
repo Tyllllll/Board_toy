@@ -100,9 +100,4 @@ public class WelcomeActivity extends AppCompatActivity {
 		handler.removeCallbacks(runnable);
 		finish();
 	}
-
-	public void openWeb(View v) {
-		counter = 3;
-		handler.removeCallbacks(runnable);
-	}
 }
