@@ -51,7 +51,6 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 
-		SharedPreferences sharedPreferences = getSharedPreferences("userInfoPreferences", MODE_PRIVATE);
 		userInfo = (UserInfo)getApplication();
 
 		usernameEditText = findViewById(R.id.username);
