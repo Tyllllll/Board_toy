@@ -1,6 +1,7 @@
 package team.group10.board.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,6 +20,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import team.group10.board.R;
 import team.group10.board.model.UserInfo;
@@ -41,8 +43,14 @@ import team.group10.board.utils.mString;
  */
 public class ContentActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
+	ListView listView;
 	UserInfo userInfo;
 	List<NewsItem> newsItemList;
+	int[] list_order;
+	JSONArray jsonArray;
+	SwipeRefreshLayout swipeRefreshLayout;
+	// listview中item的加载倍数。总加载数为metadata中的个数乘loadSizeRatio
+	final int loadSizeRatio = 5;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +59,22 @@ public class ContentActivity extends AppCompatActivity implements AdapterView.On
 
 		startActivity(new Intent(this, WelcomeActivity.class));
 
+		swipeRefreshLayout = findViewById(R.id.swipeview);
+		swipeRefreshLayout.setColorSchemeResources(R.color.teal_200, R.color.purple_500, R.color.purple_200);
+		swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				try {
+					setNewsInList();
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				listView.deferNotifyDataSetChanged();
+				swipeRefreshLayout.setRefreshing(false);
+			}
+		});
+
+		listView = findViewById(R.id.news_item);
 		userInfo = (UserInfo) getApplication();
 		Display display = this.getWindowManager().getDefaultDisplay();
 		Point point = new Point();
@@ -58,46 +82,17 @@ public class ContentActivity extends AppCompatActivity implements AdapterView.On
 		userInfo.setScreenWidth(point.x);
 		userInfo.setScreenHeight(point.y);
 
-		final ListView listView;
 		newsItemList = new ArrayList<>();
-		JSONObject newsJson;
-		HashMap<String, Object> map;
 		String newsString = mJson.getJsonFromDotJson("metadata.json", this);
 		try {
-			JSONArray jsonArray = new JSONArray(newsString);
-			int type;
-			for (int i = 0; i < jsonArray.length(); i++) {
-				newsJson = jsonArray.getJSONObject(i);
-				map = new HashMap<>();
-				type = newsJson.getInt("type");
-				switch (type) {
-					case 0:
-						break;
-					case 4:
-						JSONArray tempJson = newsJson.getJSONArray("covers");
-						map.put("image1", mString.getResId(tempJson.getString(0).split("\\.")[0].toLowerCase(), R.drawable.class));
-						map.put("image2", mString.getResId(tempJson.getString(1).split("\\.")[0].toLowerCase(), R.drawable.class));
-						map.put("image3", mString.getResId(tempJson.getString(2).split("\\.")[0].toLowerCase(), R.drawable.class));
-						map.put("image4", mString.getResId(tempJson.getString(3).split("\\.")[0].toLowerCase(), R.drawable.class));
-						break;
-					default:
-						String image_name = newsJson.getString("cover").split("\\.")[0].toLowerCase();
-						map.put("image", mString.getResId(image_name, R.drawable.class));
-						break;
-				}
-				map.put("title", newsJson.getString("title"));
-				map.put("author", newsJson.getString("author"));
-				map.put("publishTime", newsJson.getString("publishTime"));
-				map.put("id", newsJson.getString("id"));
-				newsItemList.add(new NewsItem(type, map));
-			}
-
+			jsonArray = new JSONArray(newsString);
+			// 随机数列表
+			list_order = new int[jsonArray.length() * loadSizeRatio];
+			setNewsInList();
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 
-		listView = findViewById(R.id.news_item);
-		listView.setAdapter(new mAdapter(this, newsItemList, userInfo));
 		listView.setOnItemClickListener(this);
 
 		SharedPreferences login_info = getSharedPreferences("userInfoPreferences", MODE_PRIVATE);
@@ -132,5 +127,42 @@ public class ContentActivity extends AppCompatActivity implements AdapterView.On
 		editor.apply();
 		userInfo.setToken("123456");
 		Toast.makeText(this, "token has been changed to invalid", Toast.LENGTH_SHORT).show();
+	}
+
+	private void setNewsInList() throws JSONException {
+		JSONObject newsJson;
+		HashMap<String, Object> map;
+		int type;
+		Random random = new Random(System.currentTimeMillis());
+		for (int i = 0; i < list_order.length; i++) {
+			list_order[i] = random.nextInt(jsonArray.length());
+		}
+		newsItemList.clear();
+		for (int i: list_order) {
+			newsJson = jsonArray.getJSONObject(i);
+			map = new HashMap<>();
+			type = newsJson.getInt("type");
+			switch (type) {
+				case 0:
+					break;
+				case 4:
+					JSONArray tempJson = newsJson.getJSONArray("covers");
+					map.put("image1", mString.getResId(tempJson.getString(0).split("\\.")[0].toLowerCase(), R.drawable.class));
+					map.put("image2", mString.getResId(tempJson.getString(1).split("\\.")[0].toLowerCase(), R.drawable.class));
+					map.put("image3", mString.getResId(tempJson.getString(2).split("\\.")[0].toLowerCase(), R.drawable.class));
+					map.put("image4", mString.getResId(tempJson.getString(3).split("\\.")[0].toLowerCase(), R.drawable.class));
+					break;
+				default:
+					String image_name = newsJson.getString("cover").split("\\.")[0].toLowerCase();
+					map.put("image", mString.getResId(image_name, R.drawable.class));
+					break;
+			}
+			map.put("title", newsJson.getString("title"));
+			map.put("author", newsJson.getString("author"));
+			map.put("publishTime", newsJson.getString("publishTime"));
+			map.put("id", newsJson.getString("id"));
+			newsItemList.add(new NewsItem(type, map));
+		}
+		listView.setAdapter(new mAdapter(this, newsItemList, userInfo));
 	}
 }
