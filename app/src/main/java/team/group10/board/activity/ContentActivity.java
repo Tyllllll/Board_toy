@@ -26,8 +26,8 @@ import team.group10.board.R;
 import team.group10.board.model.UserInfo;
 import team.group10.board.utils.MyAdapter;
 import team.group10.board.model.NewsItem;
-import team.group10.board.utils.MymJson;
-import team.group10.board.utils.MymString;
+import team.group10.board.utils.MyJson;
+import team.group10.board.utils.MyString;
 
 /**
  * @ProjectName: Board
@@ -83,7 +83,7 @@ public class ContentActivity extends AppCompatActivity implements AdapterView.On
 		userInfo.setScreenHeight(point.y);
 
 		newsItemList = new ArrayList<>();
-		String newsString = MymJson.getJsonFromDotJson("metadata.json", this);
+		String newsString = MyJson.getJsonFromDotJson("metadata.json", this);
 		try {
 			jsonArray = new JSONArray(newsString);
 			// 随机数列表
@@ -144,14 +144,14 @@ public class ContentActivity extends AppCompatActivity implements AdapterView.On
 					break;
 				case 4:
 					JSONArray tempJson = newsJson.getJSONArray("covers");
-					map.put("image1", MymString.getResId(tempJson.getString(0).split("\\.")[0].toLowerCase(), R.drawable.class));
-					map.put("image2", MymString.getResId(tempJson.getString(1).split("\\.")[0].toLowerCase(), R.drawable.class));
-					map.put("image3", MymString.getResId(tempJson.getString(2).split("\\.")[0].toLowerCase(), R.drawable.class));
-					map.put("image4", MymString.getResId(tempJson.getString(3).split("\\.")[0].toLowerCase(), R.drawable.class));
+					map.put("image1", MyString.getResId(tempJson.getString(0).split("\\.")[0].toLowerCase(), R.drawable.class));
+					map.put("image2", MyString.getResId(tempJson.getString(1).split("\\.")[0].toLowerCase(), R.drawable.class));
+					map.put("image3", MyString.getResId(tempJson.getString(2).split("\\.")[0].toLowerCase(), R.drawable.class));
+					map.put("image4", MyString.getResId(tempJson.getString(3).split("\\.")[0].toLowerCase(), R.drawable.class));
 					break;
 				default:
 					String image_name = newsJson.getString("cover").split("\\.")[0].toLowerCase();
-					map.put("image", MymString.getResId(image_name, R.drawable.class));
+					map.put("image", MyString.getResId(image_name, R.drawable.class));
 					break;
 			}
 			map.put("title", newsJson.getString("title"));

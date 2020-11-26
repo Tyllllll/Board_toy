@@ -32,7 +32,7 @@ import okhttp3.Response;
 import team.group10.board.R;
 import team.group10.board.model.UserInfo;
 import team.group10.board.utils.MyHttpRequest;
-import team.group10.board.utils.MymString;
+import team.group10.board.utils.MyString;
 import team.group10.board.utils.MyImageConvert;
 
 public class DetailedActivity extends AppCompatActivity {
@@ -147,7 +147,7 @@ public class DetailedActivity extends AppCompatActivity {
 							if (matcher.find())
 							{
 								int imagePathLength = matcher.end() - matcher.start() - 2;
-								newBody.replace(end - 1 - imagePathLength, end - 1, String.valueOf(MymString.getResId(imageName, R.drawable.class)));
+								newBody.replace(end - 1 - imagePathLength, end - 1, String.valueOf(MyString.getResId(imageName, R.drawable.class)));
 							}
 						} else {
 							newBody = new StringBuffer(body);
