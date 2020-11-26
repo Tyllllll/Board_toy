@@ -19,7 +19,7 @@ import java.io.InputStreamReader;
  * @UpdateRemark: 更新说明：
  * @Version: 1.0
  */
-public class mJson {
+public class MymJson {
 	public static String getJsonFromDotJson(String filename, Activity activity) {
 		StringBuilder stringBuilder = new StringBuilder();
 		try {

@@ -31,9 +31,9 @@ import okhttp3.Callback;
 import okhttp3.Response;
 import team.group10.board.R;
 import team.group10.board.model.UserInfo;
-import team.group10.board.utils.mHttpRequest;
-import team.group10.board.utils.mString;
-import team.group10.board.utils.mImageConvert;
+import team.group10.board.utils.MyHttpRequest;
+import team.group10.board.utils.MymString;
+import team.group10.board.utils.MyImageConvert;
 
 public class DetailedActivity extends AppCompatActivity {
 
@@ -147,7 +147,7 @@ public class DetailedActivity extends AppCompatActivity {
 							if (matcher.find())
 							{
 								int imagePathLength = matcher.end() - matcher.start() - 2;
-								newBody.replace(end - 1 - imagePathLength, end - 1, String.valueOf(mString.getResId(imageName, R.drawable.class)));
+								newBody.replace(end - 1 - imagePathLength, end - 1, String.valueOf(MymString.getResId(imageName, R.drawable.class)));
 							}
 						} else {
 							newBody = new StringBuffer(body);
@@ -167,14 +167,14 @@ public class DetailedActivity extends AppCompatActivity {
 										@Override
 										public Drawable getDrawable(String s) {
 											int id = Integer.parseInt(s);
-											int width = mImageConvert.getWidth(DetailedActivity.this.getResources(), id);
-											int height = mImageConvert.getHeight(DetailedActivity.this.getResources(), id);
+											int width = MyImageConvert.getWidth(DetailedActivity.this.getResources(), id);
+											int height = MyImageConvert.getHeight(DetailedActivity.this.getResources(), id);
 											// 计算等比放缩比例
 											float heightRatio = (float)height / (userInfo.getScreenWidth() * (float)0.618);
 											float widthRatio =  (float)width / userInfo.getScreenWidth();
 											float ratio = Math.max(heightRatio, widthRatio);
 											BitmapDrawable drawable = new BitmapDrawable(DetailedActivity.this.getResources()
-													, mImageConvert.decodeImage(DetailedActivity.this.getResources()
+													, MyImageConvert.decodeImage(DetailedActivity.this.getResources()
 													, id, (int)(width / ratio), (int)(height / ratio)));
 											drawable.setBounds(0, 0, (int)(width / ratio), (int)(height / ratio));
 											return drawable;
@@ -237,10 +237,10 @@ public class DetailedActivity extends AppCompatActivity {
 							}
 						}
 					};
-					mHttpRequest.postLogin(userInfo.getUsername(), userInfo.getPassword(), loseTokenLoginCallback);
+					MyHttpRequest.postLogin(userInfo.getUsername(), userInfo.getPassword(), loseTokenLoginCallback);
 				}
 			}
 		};
-		mHttpRequest.getArticle(articleId, userInfo.getToken(), true, getFirstCallback);
+		MyHttpRequest.getArticle(articleId, userInfo.getToken(), true, getFirstCallback);
 	}
 }

@@ -24,10 +24,10 @@ import java.util.Random;
 
 import team.group10.board.R;
 import team.group10.board.model.UserInfo;
-import team.group10.board.utils.mAdapter;
+import team.group10.board.utils.MyAdapter;
 import team.group10.board.model.NewsItem;
-import team.group10.board.utils.mJson;
-import team.group10.board.utils.mString;
+import team.group10.board.utils.MymJson;
+import team.group10.board.utils.MymString;
 
 /**
  * @ProjectName: Board
@@ -83,7 +83,7 @@ public class ContentActivity extends AppCompatActivity implements AdapterView.On
 		userInfo.setScreenHeight(point.y);
 
 		newsItemList = new ArrayList<>();
-		String newsString = mJson.getJsonFromDotJson("metadata.json", this);
+		String newsString = MymJson.getJsonFromDotJson("metadata.json", this);
 		try {
 			jsonArray = new JSONArray(newsString);
 			// 随机数列表
@@ -135,7 +135,7 @@ public class ContentActivity extends AppCompatActivity implements AdapterView.On
 			list_order[i] = random.nextInt(jsonArray.length());
 		}
 		newsItemList.clear();
-		for (int i: list_order) {
+		for (int i = 0; i < jsonArray.length(); i++) {
 			newsJson = jsonArray.getJSONObject(i);
 			map = new HashMap<>();
 			type = newsJson.getInt("type");
@@ -144,14 +144,14 @@ public class ContentActivity extends AppCompatActivity implements AdapterView.On
 					break;
 				case 4:
 					JSONArray tempJson = newsJson.getJSONArray("covers");
-					map.put("image1", mString.getResId(tempJson.getString(0).split("\\.")[0].toLowerCase(), R.drawable.class));
-					map.put("image2", mString.getResId(tempJson.getString(1).split("\\.")[0].toLowerCase(), R.drawable.class));
-					map.put("image3", mString.getResId(tempJson.getString(2).split("\\.")[0].toLowerCase(), R.drawable.class));
-					map.put("image4", mString.getResId(tempJson.getString(3).split("\\.")[0].toLowerCase(), R.drawable.class));
+					map.put("image1", MymString.getResId(tempJson.getString(0).split("\\.")[0].toLowerCase(), R.drawable.class));
+					map.put("image2", MymString.getResId(tempJson.getString(1).split("\\.")[0].toLowerCase(), R.drawable.class));
+					map.put("image3", MymString.getResId(tempJson.getString(2).split("\\.")[0].toLowerCase(), R.drawable.class));
+					map.put("image4", MymString.getResId(tempJson.getString(3).split("\\.")[0].toLowerCase(), R.drawable.class));
 					break;
 				default:
 					String image_name = newsJson.getString("cover").split("\\.")[0].toLowerCase();
-					map.put("image", mString.getResId(image_name, R.drawable.class));
+					map.put("image", MymString.getResId(image_name, R.drawable.class));
 					break;
 			}
 			map.put("title", newsJson.getString("title"));
@@ -160,6 +160,6 @@ public class ContentActivity extends AppCompatActivity implements AdapterView.On
 			map.put("id", newsJson.getString("id"));
 			newsItemList.add(new NewsItem(type, map));
 		}
-		listView.setAdapter(new mAdapter(this, newsItemList, userInfo));
+		listView.setAdapter(new MyAdapter(this, newsItemList, userInfo));
 	}
 }

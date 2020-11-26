@@ -32,7 +32,7 @@ import team.group10.board.model.UserInfo;
  * @UpdateRemark: 更新说明：
  * @Version: 1.0
  */
-public class mAdapter extends BaseAdapter {
+public class MyAdapter extends BaseAdapter {
 	private List<NewsItem> newsItemList;
 	private LayoutInflater layoutInflater;
 	private UserInfo userInfo;
@@ -42,7 +42,7 @@ public class mAdapter extends BaseAdapter {
 	ViewHolder2 holder3 = null;
 	ViewHolder3 holder4 = null;
 
-	public mAdapter(Context context, List<NewsItem> newsItemList, UserInfo userInfo) {
+	public MyAdapter(Context context, List<NewsItem> newsItemList, UserInfo userInfo) {
 		this.newsItemList = newsItemList;
 		layoutInflater = LayoutInflater.from(context);
 		this.userInfo = userInfo;
@@ -200,7 +200,7 @@ public class mAdapter extends BaseAdapter {
 					@Override
 					public void run() {
 						Message msg = Message.obtain();
-						msg.obj = mImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image"), imageLayout1.mWidth, imageLayout1.mHeight);
+						msg.obj = MyImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image"), imageLayout1.mWidth, imageLayout1.mHeight);
 						msg.what = 1;
 						handler.sendMessage(msg);
 					}
@@ -214,7 +214,7 @@ public class mAdapter extends BaseAdapter {
 					@Override
 					public void run() {
 						Message msg = Message.obtain();
-						msg.obj = mImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image"), imageLayout2.mWidth, imageLayout2.mHeight);
+						msg.obj = MyImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image"), imageLayout2.mWidth, imageLayout2.mHeight);
 						msg.what = 2;
 						handler.sendMessage(msg);
 					}
@@ -228,7 +228,7 @@ public class mAdapter extends BaseAdapter {
 					@Override
 					public void run() {
 						Message msg = Message.obtain();
-						msg.obj = mImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image"), imageLayout3.mWidth, imageLayout3.mHeight);
+						msg.obj = MyImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image"), imageLayout3.mWidth, imageLayout3.mHeight);
 						msg.what = 3;
 						handler.sendMessage(msg);
 					}
@@ -242,7 +242,7 @@ public class mAdapter extends BaseAdapter {
 					@Override
 					public void run() {
 						Message msg = Message.obtain();
-						msg.obj = mImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image1"), imageLayout4.mWidth, imageLayout4.mHeight);
+						msg.obj = MyImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image1"), imageLayout4.mWidth, imageLayout4.mHeight);
 						msg.what = 4;
 						handler.sendMessage(msg);
 					}
@@ -251,7 +251,7 @@ public class mAdapter extends BaseAdapter {
 					@Override
 					public void run() {
 						Message msg = Message.obtain();
-						msg.obj = mImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image2"), imageLayout4.mWidth, imageLayout4.mHeight);
+						msg.obj = MyImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image2"), imageLayout4.mWidth, imageLayout4.mHeight);
 						msg.what = 5;
 						handler.sendMessage(msg);
 					}
@@ -260,7 +260,7 @@ public class mAdapter extends BaseAdapter {
 					@Override
 					public void run() {
 						Message msg = Message.obtain();
-						msg.obj = mImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image3"), imageLayout4.mWidth, imageLayout4.mHeight);
+						msg.obj = MyImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image3"), imageLayout4.mWidth, imageLayout4.mHeight);
 						msg.what = 6;
 						handler.sendMessage(msg);
 					}
@@ -269,7 +269,7 @@ public class mAdapter extends BaseAdapter {
 					@Override
 					public void run() {
 						Message msg = Message.obtain();
-						msg.obj = mImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image4"), imageLayout4.mWidth, imageLayout4.mHeight);
+						msg.obj = MyImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image4"), imageLayout4.mWidth, imageLayout4.mHeight);
 						msg.what = 7;
 						handler.sendMessage(msg);
 					}

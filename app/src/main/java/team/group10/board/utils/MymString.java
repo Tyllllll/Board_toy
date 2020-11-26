@@ -14,7 +14,7 @@ import java.lang.reflect.Field;
  * @UpdateRemark: 更新说明：
  * @Version: 1.0
  */
-public class mString {
+public class MymString {
 	public static int getResId(String variableName, Class<?> c) {
 		try {
 			Field field = c.getDeclaredField(variableName);

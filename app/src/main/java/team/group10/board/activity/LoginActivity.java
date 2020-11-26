@@ -24,7 +24,7 @@ import okhttp3.Callback;
 import okhttp3.Response;
 import team.group10.board.R;
 import team.group10.board.model.UserInfo;
-import team.group10.board.utils.mHttpRequest;
+import team.group10.board.utils.MyHttpRequest;
 
 /**
  * @ProjectName: Board
@@ -124,7 +124,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher {
 			}
 		};
 		// 发送网络请求
-		mHttpRequest.postLogin(userInfo.getUsername(), userInfo.getPassword(), loginCallback);
+		MyHttpRequest.postLogin(userInfo.getUsername(), userInfo.getPassword(), loginCallback);
 	}
 
 	@Override

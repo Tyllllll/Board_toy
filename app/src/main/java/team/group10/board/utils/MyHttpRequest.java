@@ -17,7 +17,7 @@ import okhttp3.Request;
  * @UpdateRemark: 更新说明：
  * @Version: 1.0
  */
-public class mHttpRequest {
+public class MyHttpRequest {
 	public static void postLogin(String username, String password, Callback callback) {
 		OkHttpClient client = new OkHttpClient();
 		FormBody formBody = new FormBody.Builder()

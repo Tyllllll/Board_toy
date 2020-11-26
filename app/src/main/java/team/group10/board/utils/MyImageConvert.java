@@ -16,7 +16,7 @@ import android.graphics.BitmapFactory;
  * @UpdateRemark: 更新说明：
  * @Version: 1.0
  */
-public class mImageConvert {
+public class MyImageConvert {
 	public static Bitmap decodeImage(Resources resources, int resId, int reqWidth, int reqHeight) {
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		// 只读图片的文件信息，不加载图像文件
