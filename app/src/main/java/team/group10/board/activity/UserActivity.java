@@ -40,6 +40,7 @@ public class UserActivity extends AppCompatActivity {
 			startActivityForResult(new Intent(this, LoginActivity.class), 201);
 		}
 		username = findViewById(R.id.username);
+		username.setText(userInfo.getUsername());
 	}
 
 	@Override
