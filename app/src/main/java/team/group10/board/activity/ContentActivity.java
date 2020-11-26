@@ -135,7 +135,7 @@ public class ContentActivity extends AppCompatActivity implements AdapterView.On
 			list_order[i] = random.nextInt(jsonArray.length());
 		}
 		newsItemList.clear();
-		for (int i = 0; i < jsonArray.length(); i++) {
+		for (int i: list_order) {
 			newsJson = jsonArray.getJSONObject(i);
 			map = new HashMap<>();
 			type = newsJson.getInt("type");
