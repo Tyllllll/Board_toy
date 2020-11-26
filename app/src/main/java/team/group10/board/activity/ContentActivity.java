@@ -112,12 +112,9 @@ public class ContentActivity extends AppCompatActivity implements AdapterView.On
 		startActivityForResult(intent, 100);
 	}
 
-	public void clearPreferences(View view) {
-		SharedPreferences.Editor editor = getSharedPreferences("userInfoPreferences", MODE_PRIVATE).edit();
-		editor.clear();
-		editor.commit();
-		userInfo.clear();
-		Toast.makeText(this, "userInfo has been cleared", Toast.LENGTH_SHORT).show();
+	public void userEntry(View v) {
+		// 进useractivity后判断有没有个人信息
+		startActivity(new Intent(this, UserActivity.class));
 	}
 
 	public void changeToken(View v) {
