@@ -2,6 +2,7 @@ package team.group10.board.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -200,8 +201,7 @@ public class MyAdapter extends BaseAdapter {
 					@Override
 					public void run() {
 						Message msg = Message.obtain();
-						msg.obj = MyImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image"), imageLayout1.mWidth, imageLayout1.mHeight);
-						msg.what = 1;
+						msg.obj = new SendMsg(holder1.image, MyImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image"), imageLayout1.mWidth, imageLayout1.mHeight));
 						handler.sendMessage(msg);
 					}
 				}).start();
@@ -214,8 +214,7 @@ public class MyAdapter extends BaseAdapter {
 					@Override
 					public void run() {
 						Message msg = Message.obtain();
-						msg.obj = MyImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image"), imageLayout2.mWidth, imageLayout2.mHeight);
-						msg.what = 2;
+						msg.obj = new SendMsg(holder2.image, MyImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image"), imageLayout2.mWidth, imageLayout2.mHeight));
 						handler.sendMessage(msg);
 					}
 				}).start();
@@ -228,8 +227,7 @@ public class MyAdapter extends BaseAdapter {
 					@Override
 					public void run() {
 						Message msg = Message.obtain();
-						msg.obj = MyImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image"), imageLayout3.mWidth, imageLayout3.mHeight);
-						msg.what = 3;
+						msg.obj = new SendMsg(holder3.image, MyImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image"), imageLayout3.mWidth, imageLayout3.mHeight));
 						handler.sendMessage(msg);
 					}
 				}).start();
@@ -242,8 +240,7 @@ public class MyAdapter extends BaseAdapter {
 					@Override
 					public void run() {
 						Message msg = Message.obtain();
-						msg.obj = MyImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image1"), imageLayout4.mWidth, imageLayout4.mHeight);
-						msg.what = 4;
+						msg.obj = new SendMsg(holder4.image1, MyImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image1"), imageLayout4.mWidth, imageLayout4.mHeight));
 						handler.sendMessage(msg);
 					}
 				}).start();
@@ -251,8 +248,7 @@ public class MyAdapter extends BaseAdapter {
 					@Override
 					public void run() {
 						Message msg = Message.obtain();
-						msg.obj = MyImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image2"), imageLayout4.mWidth, imageLayout4.mHeight);
-						msg.what = 5;
+						msg.obj = new SendMsg(holder4.image2, MyImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image2"), imageLayout4.mWidth, imageLayout4.mHeight));
 						handler.sendMessage(msg);
 					}
 				}).start();
@@ -260,8 +256,7 @@ public class MyAdapter extends BaseAdapter {
 					@Override
 					public void run() {
 						Message msg = Message.obtain();
-						msg.obj = MyImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image3"), imageLayout4.mWidth, imageLayout4.mHeight);
-						msg.what = 6;
+						msg.obj = new SendMsg(holder4.image3, MyImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image3"), imageLayout4.mWidth, imageLayout4.mHeight));
 						handler.sendMessage(msg);
 					}
 				}).start();
@@ -269,8 +264,7 @@ public class MyAdapter extends BaseAdapter {
 					@Override
 					public void run() {
 						Message msg = Message.obtain();
-						msg.obj = MyImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image4"), imageLayout4.mWidth, imageLayout4.mHeight);
-						msg.what = 7;
+						msg.obj = new SendMsg(holder4.image4, MyImageConvert.decodeImage(finalView.getResources(), (Integer) newsItemList.get(i).getMap().get("image4"), imageLayout4.mWidth, imageLayout4.mHeight));
 						handler.sendMessage(msg);
 					}
 				}).start();
@@ -285,64 +279,51 @@ public class MyAdapter extends BaseAdapter {
 		@Override
 		public void handleMessage(@NonNull Message msg) {
 			super.handleMessage(msg);
-			switch (msg.what) {
-				case 1:
-					holder1.image.setImageBitmap((Bitmap)msg.obj);
-					break;
-				case 2:
-					holder2.image.setImageBitmap((Bitmap)msg.obj);
-					break;
-				case 3:
-					holder3.image.setImageBitmap((Bitmap)msg.obj);
-					break;
-				case 4:
-					holder4.image1.setImageBitmap((Bitmap)msg.obj);
-					break;
-				case 5:
-					holder4.image2.setImageBitmap((Bitmap)msg.obj);
-					break;
-				case 6:
-					holder4.image3.setImageBitmap((Bitmap)msg.obj);
-					break;
-				case 7:
-					holder4.image4.setImageBitmap((Bitmap)msg.obj);
-					break;
-				default:
-					break;
-			}
+			SendMsg sendMsg = (SendMsg)msg.obj;
+			sendMsg.imv.setImageBitmap(sendMsg.bitmap);
 		}
 	};
-}
 
-class ViewHolder1 {
-	TextView title;
-	TextView author;
-	TextView publishTime;
-}
+	private class ViewHolder1 {
+		TextView title;
+		TextView author;
+		TextView publishTime;
+	}
 
-class ViewHolder2 {
-	TextView title;
-	TextView author;
-	TextView publishTime;
-	ImageView image;
-}
+	private class ViewHolder2 {
+		TextView title;
+		TextView author;
+		TextView publishTime;
+		ImageView image;
+	}
 
-class ViewHolder3 {
-	TextView title;
-	TextView author;
-	TextView publishTime;
-	ImageView image1;
-	ImageView image2;
-	ImageView image3;
-	ImageView image4;
-}
+	private class ViewHolder3 {
+		TextView title;
+		TextView author;
+		TextView publishTime;
+		ImageView image1;
+		ImageView image2;
+		ImageView image3;
+		ImageView image4;
+	}
 
-class ImageSize {
-	int mWidth;
-	int mHeight;
+	private class SendMsg {
+		ImageView imv;
+		Bitmap bitmap;
 
-	public ImageSize(int mWidth, int mHeight) {
-		this.mWidth = mWidth;
-		this.mHeight = mHeight;
+		public SendMsg(ImageView imv, Bitmap bitmap) {
+			this.imv = imv;
+			this.bitmap = bitmap;
+		}
+	}
+
+	private class ImageSize {
+		int mWidth;
+		int mHeight;
+
+		public ImageSize(int mWidth, int mHeight) {
+			this.mWidth = mWidth;
+			this.mHeight = mHeight;
+		}
 	}
 }
